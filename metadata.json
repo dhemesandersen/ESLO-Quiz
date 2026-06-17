@@ -1,0 +1,6 @@
+{
+  "name": "ESLO Lifestyle Oncology Quiz",
+  "description": "A premium, animated multi-step quiz experience designed for health professionals at event stands to test and explore evidence-based Lifestyle Oncology.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
