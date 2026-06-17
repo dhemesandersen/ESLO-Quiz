@@ -330,11 +330,7 @@
         }
 
         .checkbox-card input[type="checkbox"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-            pointer-events: none;
+            display: none !important;
         }
 
         .checkbox-card:hover {
@@ -863,8 +859,8 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
             <div id="progress-text">About You</div>
-            <div style="display: flex; align-items: center; justify-content: flex-end; width: auto; max-width: 120px;">
-                <img src="https://storage.mlcdn.com/account_image/571626/4rLrnyM7VNNq9adiFZHBoRtU70bZdvitaVIad8wQ.png" alt="ESLO Logo" style="height: 32px; width: auto; object-fit: contain;">
+            <div style="display: flex; align-items: center; justify-content: flex-end; width: auto; max-width: 200px;">
+                <img src="https://storage.mlcdn.com/account_image/571626/4rLrnyM7VNNq9adiFZHBoRtU70bZdvitaVIad8wQ.png" alt="ESLO Logo" style="height: 56px; width: auto; object-fit: contain;">
             </div>
         </div>
         <div class="progress-track">
@@ -876,12 +872,12 @@
 
         <!-- STEP 0: Intro (Index 0) -->
         <div class="step active" id="step-0" style="justify-content: center; text-align: center; padding-top: 40px; padding-bottom: 40px;">
-            <div class="visual-pane" style="height: 240px;">
-                <div class="abstract-shape" style="border-color: var(--gold); width: 280px; height: 280px;"></div>
-                <div class="abstract-shape" style="animation-delay: -2s; opacity: 0.6; width: 280px; height: 280px;"></div>
-                <div class="abstract-shape" style="animation-delay: -5s; opacity: 0.3; width: 310px; height: 310px; border-color: var(--navy)"></div>
+            <div class="visual-pane" style="height: 280px;">
+                <div class="abstract-shape" style="border-color: var(--gold); width: 320px; height: 320px;"></div>
+                <div class="abstract-shape" style="animation-delay: -2s; opacity: 0.6; width: 320px; height: 320px;"></div>
+                <div class="abstract-shape" style="animation-delay: -5s; opacity: 0.3; width: 350px; height: 350px; border-color: var(--navy)"></div>
                 <div style="text-align: center; z-index: 10;">
-                    <img src="https://storage.mlcdn.com/account_image/571626/4rLrnyM7VNNq9adiFZHBoRtU70bZdvitaVIad8wQ.png" alt="ESLO Logo" style="height: 90px; width: auto; max-width: 240px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(10, 25, 47, 0.1));">
+                    <img src="https://storage.mlcdn.com/account_image/571626/4rLrnyM7VNNq9adiFZHBoRtU70bZdvitaVIad8wQ.png" alt="ESLO Logo" style="height: 130px; width: auto; max-width: 320px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(10, 25, 47, 0.1));">
                 </div>
             </div>
             <h1 style="font-size: 32px; line-height: 1.25; margin-bottom: 16px;">Test Your Lifestyle Oncology Knowledge</h1>
@@ -1229,7 +1225,7 @@
             
             <div style="margin-top: auto;">
                 <button class="primary-btn" style="margin-bottom: 12px;" onclick="location.reload()">Restart Quiz</button>
-                <button class="secondary-btn" onclick="window.open('https://www.eslo.pro', '_blank')">Visit ESLO</button>
+                <button class="secondary-btn" onclick="window.open('https://www.esloncology.com', '_blank')">Visit ESLO</button>
             </div>
         </div>
 
@@ -1619,13 +1615,14 @@
 
     function syncToMailerLite() {
         try {
-            // Helper to set value and trigger input & change events
+            // Helper to set value and trigger input, change & blur events
             const setValWithEvents = (selector, val) => {
                 const el = document.querySelector(selector);
                 if (el) {
                     el.value = val;
                     el.dispatchEvent(new Event('input', { bubbles: true }));
                     el.dispatchEvent(new Event('change', { bubbles: true }));
+                    el.dispatchEvent(new Event('blur', { bubbles: true }));
                 }
             };
 
@@ -1640,25 +1637,24 @@
             if (prof) {
                 prof.value = appData.profession;
                 prof.dispatchEvent(new Event('change', { bubbles: true }));
+                prof.dispatchEvent(new Event('blur', { bubbles: true }));
             }
 
-            // Checkboxes (Interests)
+            // Checkboxes (Interests) - Using .click() triggers internal event handlers of MailerLite
             const intCbs = document.querySelectorAll('input[name="fields[curso_interesse][]"]');
             intCbs.forEach(cb => {
                 const wantsChecked = appData.interests.includes(cb.value);
                 if (cb.checked !== wantsChecked) {
-                    cb.checked = wantsChecked;
-                    cb.dispatchEvent(new Event('change', { bubbles: true }));
+                    cb.click();
                 }
             });
 
-            // Checkbox (Consent)
+            // Checkbox (Consent) - Using .click() ensures MailerLite validation passes
             const consentGroup = document.querySelector('.ml-form-checkboxRow input[type="checkbox"]');
             if (consentGroup) {
                 const wantsConsent = appData.consent;
                 if (consentGroup.checked !== wantsConsent) {
-                    consentGroup.checked = wantsConsent;
-                    consentGroup.dispatchEvent(new Event('change', { bubbles: true }));
+                    consentGroup.click();
                 }
             }
 
