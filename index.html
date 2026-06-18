@@ -481,6 +481,88 @@
             height: 14px;
         }
 
+        /* 2-Column Interests Grid & Custom Colors */
+        .interests-grid-col2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        @media (max-width: 580px) {
+            .interests-grid-col2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkbox-card.colored-interest {
+            border: 1.5px solid var(--card-border);
+            background: #fff;
+            color: var(--navy);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            align-items: center;
+        }
+
+        .checkbox-card.colored-interest:hover {
+            border-color: var(--card-color);
+            background: var(--card-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.03);
+        }
+
+        .checkbox-card.colored-interest.selected {
+            border-color: var(--card-color);
+            background: var(--card-bg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02), inset 0 0 0 1px var(--card-color);
+        }
+
+        .checkbox-card.colored-interest .checkbox-box {
+            border-color: var(--card-border);
+        }
+
+        .checkbox-card.colored-interest.selected .checkbox-box {
+            background: var(--card-color);
+            border-color: var(--card-color);
+        }
+
+        /* Micro-animations for Interest Icons */
+        .checkbox-card.colored-interest .interest-icon-wrapper {
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkbox-card.colored-interest:hover .interest-icon-wrapper {
+            transform: scale(1.22) rotate(6deg);
+        }
+
+        .checkbox-card.colored-interest.selected .interest-icon-wrapper {
+            animation: bounceWiggle 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes bounceWiggle {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.35) rotate(-12deg); }
+            60% { transform: scale(0.95) rotate(10deg); }
+            100% { transform: scale(1.15) rotate(0deg); }
+        }
+
+        /* Constellation Animation */
+        @keyframes spinConstellation {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulseNode {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 1px rgba(0,0,0,0.05)); }
+            50% { transform: scale(1.18); filter: drop-shadow(0 0 5px currentColor); }
+        }
+        @keyframes pulseCore {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.22); opacity: 1; }
+        }
+
         /* Specific typography & visual aids */
         .quiz-visual {
             width: 60px;
@@ -1265,17 +1347,35 @@
         <!-- STEP 13: Interests (Index 13) -->
         <div class="step" id="step-13">
             <div class="step-motion-container">
-                <div class="motion-box">
-                    <div class="venn-container">
-                        <div class="venn-circle-1" style="animation-duration: 4.5s;"></div>
-                        <div class="venn-circle-2" style="animation-duration: 4.5s;"></div>
+                <div class="motion-box" style="background: rgba(10, 25, 47, 0.02); border-color: var(--navy);">
+                    <div class="interests-explorer-icon" style="position: relative; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                        <!-- central glowing core -->
+                        <div style="position: absolute; width: 14px; height: 14px; background: var(--navy); border-radius: 50%; box-shadow: 0 0 10px rgba(10, 25, 47, 0.4); animation: pulseCore 2.5s ease-in-out infinite;"></div>
+                        <!-- rotating particle shell -->
+                        <svg width="54" height="54" viewBox="0 0 100 100" style="animation: spinConstellation 12s linear infinite;">
+                            <!-- orbits -->
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(10, 25, 47, 0.08)" stroke-width="1.5" stroke-dasharray="4 4" />
+                            <!-- active wellness nodes -->
+                            <!-- Nutrition (Green) -->
+                            <circle cx="50" cy="15" r="7" fill="#10b981" style="animation: pulseNode 2s ease-in-out infinite;" />
+                            <!-- Exercise (Orange) -->
+                            <circle cx="80" cy="32" r="7" fill="#f97316" style="animation: pulseNode 2s ease-in-out infinite; animation-delay: 0.3s;" />
+                            <!-- Sleep (Indigo) -->
+                            <circle cx="80" cy="68" r="7" fill="#6366f1" style="animation: pulseNode 2s ease-in-out infinite; animation-delay: 0.6s;" />
+                            <!-- Mind-Body (Purple) -->
+                            <circle cx="50" cy="85" r="7" fill="#a855f7" style="animation: pulseNode 2s ease-in-out infinite; animation-delay: 0.9s;" />
+                            <!-- Supportive care (Gold) -->
+                            <circle cx="20" cy="68" r="7" fill="#d4af37" style="animation: pulseNode 2s ease-in-out infinite; animation-delay: 1.2s;" />
+                            <!-- Cancer survivorship (Teal) -->
+                            <circle cx="20" cy="32" r="7" fill="#0ea5e9" style="animation: pulseNode 2s ease-in-out infinite; animation-delay: 1.5s;" />
+                        </svg>
                     </div>
                 </div>
             </div>
             <h2 style="font-size: 26px; margin-bottom: 8px; margin-top: 16px;">Which areas would you most like to explore further?</h2>
             <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Select all that apply.</p>
             
-            <div class="options-grid" id="interests-grid">
+            <div class="interests-grid-col2" id="interests-grid">
                 <!-- Injected via JS -->
             </div>
             
@@ -1458,8 +1558,48 @@
     ];
 
     const interestsList = [
-        "Nutrition", "Exercise Oncology", "Sleep & Circadian Health", 
-        "Stress & Mind-Body Medicine", "Supportive Care", "Cancer Survivorship"
+        {
+            name: "Nutrition",
+            color: "#10b981",
+            bg: "rgba(16, 185, 129, 0.05)",
+            border: "rgba(16, 185, 129, 0.2)",
+            icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path><path d="M7 2v20"></path><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path></svg>`
+        },
+        {
+            name: "Exercise Oncology",
+            color: "#f97316",
+            bg: "rgba(249, 115, 22, 0.05)",
+            border: "rgba(249, 115, 22, 0.2)",
+            icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="3" height="12" rx="1"></rect><rect x="19" y="6" width="3" height="12" rx="1"></rect><path d="M5 12h14"></path><path d="M8 8v8"></path><path d="M16 8v8"></path></svg>`
+        },
+        {
+            name: "Sleep & Circadian Health",
+            color: "#6366f1",
+            bg: "rgba(99, 102, 241, 0.05)",
+            border: "rgba(99, 102, 241, 0.2)",
+            icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>`
+        },
+        {
+            name: "Stress & Mind-Body Medicine",
+            color: "#a855f7",
+            bg: "rgba(168, 85, 247, 0.05)",
+            border: "rgba(168, 85, 247, 0.2)",
+            icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>`
+        },
+        {
+            name: "Supportive Care",
+            color: "#d4af37",
+            bg: "rgba(212, 175, 55, 0.05)",
+            border: "rgba(212, 175, 55, 0.2)",
+            icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>`
+        },
+        {
+            name: "Cancer Survivorship",
+            color: "#0ea5e9",
+            bg: "rgba(14, 165, 233, 0.05)",
+            border: "rgba(14, 165, 233, 0.2)",
+            icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22H2M16 16c0-3-2-5-5-5M12 11c0-4-3-6-7-6M12 22V11"></path></svg>`
+        }
     ];
 
     // Initialization
@@ -1478,10 +1618,13 @@
         const intGrid = document.getElementById('interests-grid');
         interestsList.forEach(interest => {
             intGrid.innerHTML += `
-                <label class="checkbox-card">
-                    <input type="checkbox" value="${interest}" onchange="toggleInterest(this)">
+                <label class="checkbox-card colored-interest" style="--card-color: ${interest.color}; --card-bg: ${interest.bg}; --card-border: ${interest.border};">
+                    <input type="checkbox" value="${interest.name}" onchange="toggleInterest(this)">
                     <div class="checkbox-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-                    ${interest}
+                    <div class="interest-icon-wrapper" style="color: ${interest.color}; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; min-height: 24px; min-width: 24px; transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                        ${interest.icon}
+                    </div>
+                    <span style="font-size: 14px; font-weight: 500;">${interest.name}</span>
                 </label>
             `;
         });
